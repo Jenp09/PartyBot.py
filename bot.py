@@ -72,13 +72,13 @@ async def morninggreet(onOrOff):
 
 @client.command()
 async def search(*, word):
+    definition = ""
     linkWord = word.replace(' ', '+')
-    url = 'http://www.dictionary.com/browse/' + linkWord
+    url = 'https://www.wordnik.com/words/' + linkWord
     page = urllib.request.urlopen(url)
     soup = BeautifulSoup(page.read(), "html.parser")
-    header = soup.find( "header", {"class":"luna-data-header"} ).text
-    definition = soup.find( "div", {"class":"def-set"} ).text
-    await client.say("**" + word + ":" + header + definition[3:] + "**")
+    definition = soup.select_one('.active > h3:nth-child(1)').text + "\n\n" + soup.select_one(".active > ul:nth-child(2) > li:nth-child(1)").text
+    await client.say("**" + word + "\n\n" + definition + "**")
 
 @client.command()
 async def yt(*, word):
